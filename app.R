@@ -6,14 +6,8 @@ library(leaflet)
 library(maps)
 library(scales)
 library(rayshader)
-#library(dplyr)
-#library(stringr)
-#library(tidyverse)
-#library(viridis)
-#library(isoband)
 worldpop <- read.csv("worldpopDone.csv")
 gdp <- read.csv("worldGDPDone.csv")
-
 ui <- dashboardPage(
   dashboardHeader(title = "World distribution"),
   dashboardSidebar(sidebarMenu(
@@ -36,14 +30,6 @@ ui <- dashboardPage(
   dashboardBody(tabItems(
     tabItem(
       tabName = "worldgdp" ,
-      # fluidRow(width = 6 ,
-      #           column(width = 3,offset = 1.5,
-      #                  sliderInput(inputId = "year","Year",min = 1950 , max = 2100,step = TRUE,value = format(Sys.Date(),"%Y"))
-      #                 ),
-      #           column(width = 3,offset = 1.5,
-      #                  radioButtons(inputId = "sex","Sex",choices = c("Male","Female","Total"),selected = "Total"))
-      #          ),
-      #
       rglwidgetOutput(
         outputId = 'wgdp',
         height = 700,
@@ -64,16 +50,12 @@ ui <- dashboardPage(
             # )
             leafletOutput(outputId = 'mapp' , height = 700))
   ))
-  
 )
-# Define server
+####### Define server
 server <- function(input, output) {
   #data1 <- read.csv("popbysex.csv")
   worldpop <- read.csv("worldpopDone.csv")
   gdp <- read.csv("worldGDPDone.csv")
-  
-  #######################################################3333333
-  
   ############################### GDP map
   plain <- theme(
     #axis.text = element_blank(),
@@ -85,8 +67,6 @@ server <- function(input, output) {
     panel.background = element_rect(fill = "#eeeeff"),
     plot.title = element_text(hjust = 0.5)
   )
-  
-  
   worldgdp <-
     ggplot(data = gdp,
            mapping = aes(x = long, y = lat, group = group)) + plain +
@@ -102,8 +82,6 @@ server <- function(input, output) {
       direction = 1
     ) + # or direction=-1
     ggtitle("GDP report of countries in year 2016")
-  
-  
   output$wgdp <- renderRglwidget({
     # worldgdp
     plot_gg(
@@ -119,7 +97,6 @@ server <- function(input, output) {
       phi = 75
     )
     rglwidget()
-    # aa
   })
   #####################################pop map
   worldpopu <-
@@ -153,7 +130,6 @@ server <- function(input, output) {
       phi = 75
     )
     rglwidget()
-    # aa
   })
   
   ##################################### map
@@ -166,5 +142,5 @@ server <- function(input, output) {
     basicmap
   })
 }
-#########################333 Run the application
+######################### Run the application
 shinyApp(ui = ui, server = server)
